@@ -4,6 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { motion, Variants } from "framer-motion";
+
+const container: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const item: Variants = {
+    hidden: { opacity: 0, x: -20 },
+    show: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 const notes = [
     {
@@ -48,9 +59,15 @@ export default function NotesPage() {
                         </div>
                     </div>
                     <ScrollArea className="flex-1 px-2 py-2">
-                        <div className="space-y-1">
+                        <motion.div variants={container} initial="hidden" animate="show" className="space-y-1">
                             {notes.map((n) => (
-                                <div key={n.title} className={`p-4 rounded-xl cursor-pointer transition-all ${n.active ? "bg-card shadow-sm border border-primary/20" : "hover:bg-muted"}`}>
+                                <motion.div
+                                    variants={item}
+                                    whileHover={{ x: 4, scale: 1.01 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    key={n.title}
+                                    className={`p-4 rounded-xl cursor-pointer transition-all ${n.active ? "bg-card shadow-sm border border-primary/20" : "hover:bg-muted"}`}
+                                >
                                     <div className="flex justify-between items-start mb-1">
                                         <span className={`text-[10px] font-bold uppercase tracking-wider ${n.active ? "text-primary" : "text-muted-foreground"}`}>{n.course}</span>
                                         <span className="text-[10px] text-muted-foreground">{n.time}</span>
@@ -62,9 +79,9 @@ export default function NotesPage() {
                                             <span key={tag.label} className={`px-2 py-0.5 rounded text-[10px] font-medium ${tag.color}`}>{tag.label}</span>
                                         ))}
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </ScrollArea>
                 </aside>
 
@@ -111,7 +128,12 @@ export default function NotesPage() {
                             </div>
                         </div>
 
-                        <div className="prose prose-slate max-w-none space-y-6 text-muted-foreground">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 25, delay: 0.1 }}
+                            className="prose prose-slate max-w-none space-y-6 text-muted-foreground"
+                        >
                             <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
                                 <span className="text-primary opacity-50">#</span> Overview
                             </h2>
@@ -120,8 +142,8 @@ export default function NotesPage() {
                             <div className="my-8 rounded-xl overflow-hidden border bg-muted">
                                 <div className="p-4 border-b flex items-center justify-between">
                                     <span className="text-xs font-mono text-muted-foreground">linked_list.py</span>
-                                    <Button variant="ghost" size="icon" className="size-7">
-                                        <span className="material-symbols-outlined text-sm text-muted-foreground">content_copy</span>
+                                    <Button variant="ghost" size="icon" className="size-7 hover:text-primary transition-colors">
+                                        <span className="material-symbols-outlined text-sm">content_copy</span>
                                     </Button>
                                 </div>
                                 <pre className="p-6 text-sm font-mono overflow-x-auto text-primary">{`class Node:
@@ -143,30 +165,39 @@ class LinkedList:
                                 <li><strong className="text-foreground">Circular Linked List:</strong> Last element is linked to the first.</li>
                             </ul>
 
-                            <div className="p-6 bg-primary/5 border-l-4 border-primary rounded-r-xl">
+                            <motion.div
+                                whileHover={{ scale: 1.02 }}
+                                className="p-6 bg-primary/5 border-l-4 border-primary rounded-r-xl"
+                            >
                                 <p className="italic text-foreground font-medium">
                                     "Think of a linked list like a scavenger hunt where each clue leads you to the location of the next clue."
                                 </p>
-                            </div>
-                        </div>
+                            </motion.div>
+                        </motion.div>
                     </div>
 
                     {/* Floating Toolbar */}
-                    <div className="fixed bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-card shadow-2xl border rounded-2xl px-4 py-2 z-50" style={{ left: "calc(50% + 128px)" }}>
+                    <motion.div
+                        initial={{ y: 100, x: "-50%", opacity: 0 }}
+                        animate={{ y: 0, x: "-50%", opacity: 1 }}
+                        transition={{ type: "spring", stiffness: 300, damping: 25, delay: 0.3 }}
+                        className="fixed bottom-10 left-1/2 flex items-center gap-2 bg-card shadow-2xl border rounded-2xl px-4 py-2 z-50"
+                        style={{ left: "calc(50% + 128px)" }}
+                    >
                         {["format_bold", "format_italic", "format_list_bulleted"].map((icon) => (
-                            <Button key={icon} variant="ghost" size="icon" className="rounded-xl">
+                            <Button key={icon} variant="ghost" size="icon" className="rounded-xl hover:bg-muted transition-colors">
                                 <span className="material-symbols-outlined">{icon}</span>
                             </Button>
                         ))}
                         <div className="w-px h-6 bg-border mx-1" />
                         {["image", "code"].map((icon) => (
-                            <Button key={icon} variant="ghost" size="icon" className="rounded-xl">
+                            <Button key={icon} variant="ghost" size="icon" className="rounded-xl hover:bg-muted transition-colors">
                                 <span className="material-symbols-outlined">{icon}</span>
                             </Button>
                         ))}
                         <div className="w-px h-6 bg-border mx-1" />
-                        <Button className="px-4 ml-2 bg-primary text-primary-foreground text-sm font-bold">Save Changes</Button>
-                    </div>
+                        <Button className="px-4 ml-2 bg-primary text-primary-foreground text-sm font-bold shadow-md hover:shadow-lg transition-all active:scale-95">Save Changes</Button>
+                    </motion.div>
                 </main>
             </div>
         </AppShell>

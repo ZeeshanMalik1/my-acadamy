@@ -3,6 +3,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { motion, Variants } from "framer-motion";
+
+const container: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 const reels = [
     { title: "Campus Timelapse: Sunrise to Midnight", creator: "Sarah K.", views: "12K", img: "https://picsum.photos/seed/reel1/400/250", tag: "Film" },
@@ -20,31 +31,31 @@ export default function StudioPage() {
     return (
         <AppShell>
             <main className="flex-1 overflow-y-auto p-8">
-                <div className="max-w-7xl mx-auto space-y-8">
+                <motion.div variants={container} initial="hidden" animate="show" className="max-w-7xl mx-auto space-y-8">
                     {/* Header */}
-                    <div className="flex items-end justify-between">
+                    <motion.div variants={itemVariants} className="flex items-end justify-between">
                         <div>
                             <h1 className="text-3xl font-black tracking-tight">Creative Studio</h1>
                             <p className="text-muted-foreground mt-1">Showcase your talent, discover student reels, and collaborate on creative projects.</p>
                         </div>
-                        <Button className="bg-primary text-primary-foreground shadow-lg shadow-primary/20 h-11">
+                        <Button className="bg-primary text-primary-foreground shadow-lg shadow-primary/20 h-11 hover:scale-[1.02] transition-transform">
                             <span className="material-symbols-outlined mr-2">upload</span>
                             Upload Reel
                         </Button>
-                    </div>
+                    </motion.div>
 
                     {/* Featured Reel */}
-                    <div className="relative rounded-2xl overflow-hidden group cursor-pointer" style={{ height: "340px" }}>
+                    <motion.div variants={itemVariants} className="relative rounded-2xl overflow-hidden group cursor-pointer shadow-sm border border-border/50" style={{ height: "340px" }} whileHover={{ scale: 1.01 }}>
                         <img src="https://picsum.photos/seed/featured/1200/340" alt="Featured Reel" className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <div className="size-20 bg-primary/90 rounded-full flex items-center justify-center shadow-lg">
+                            <div className="size-20 bg-primary/90 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
                                 <span className="material-symbols-outlined text-5xl text-white" style={{ fontVariationSettings: "'FILL' 1" }}>play_arrow</span>
                             </div>
                         </div>
                         <div className="absolute bottom-6 left-6">
-                            <Badge className="bg-primary text-primary-foreground mb-3">Featured Reel</Badge>
-                            <h2 className="text-2xl font-bold text-white">Architecture of Tomorrow: A Visual Essay</h2>
+                            <Badge className="bg-primary text-primary-foreground mb-3 shadow-md">Featured Reel</Badge>
+                            <h2 className="text-2xl font-bold text-white drop-shadow-md">Architecture of Tomorrow: A Visual Essay</h2>
                             <div className="flex items-center gap-3 mt-2 text-white/80 text-sm">
                                 <div className="flex items-center gap-1.5">
                                     <Avatar className="size-6 border border-white/30"><AvatarImage src="https://i.pravatar.cc/150?img=9" /></Avatar>
@@ -54,11 +65,11 @@ export default function StudioPage() {
                                 <span>21.4K views</span>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* Reels Grid */}
-                        <div className="lg:col-span-2 space-y-6">
+                        <motion.div variants={itemVariants} className="lg:col-span-2 space-y-6">
                             <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary">movie</span>
@@ -73,22 +84,24 @@ export default function StudioPage() {
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 {reels.map((r) => (
-                                    <Card key={r.title} className="overflow-hidden group cursor-pointer">
-                                        <div className="relative">
-                                            <img src={r.img} alt={r.title} className="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300" />
-                                            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                                <span className="material-symbols-outlined text-white text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
+                                    <motion.div key={r.title} variants={itemVariants} whileHover={{ y: -5 }}>
+                                        <Card className="overflow-hidden group cursor-pointer shadow-sm border-border/50 hover:shadow-md transition-shadow">
+                                            <div className="relative">
+                                                <img src={r.img} alt={r.title} className="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-300" />
+                                                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                                    <span className="material-symbols-outlined text-white text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>play_circle</span>
+                                                </div>
+                                                <Badge className="absolute top-2 right-2 text-[10px] bg-card/90 text-foreground">{r.tag}</Badge>
                                             </div>
-                                            <Badge className="absolute top-2 right-2 text-[10px] bg-card/90 text-foreground">{r.tag}</Badge>
-                                        </div>
-                                        <CardContent className="p-3">
-                                            <p className="text-sm font-bold line-clamp-1">{r.title}</p>
-                                            <div className="flex justify-between items-center mt-1">
-                                                <span className="text-[11px] text-muted-foreground">{r.creator}</span>
-                                                <span className="text-[11px] text-muted-foreground">{r.views} views</span>
-                                            </div>
-                                        </CardContent>
-                                    </Card>
+                                            <CardContent className="p-3">
+                                                <p className="text-sm font-bold line-clamp-1">{r.title}</p>
+                                                <div className="flex justify-between items-center mt-1">
+                                                    <span className="text-[11px] text-muted-foreground">{r.creator}</span>
+                                                    <span className="text-[11px] text-muted-foreground">{r.views} views</span>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </motion.div>
                                 ))}
                             </div>
 
@@ -100,25 +113,27 @@ export default function StudioPage() {
                                 </h2>
                                 <div className="space-y-3">
                                     {jamSessions.map((j) => (
-                                        <Card key={j.title}>
-                                            <CardContent className="flex items-center justify-between p-4">
-                                                <div>
-                                                    <h3 className="font-bold text-base">{j.title}</h3>
-                                                    <p className="text-xs text-muted-foreground mt-1">{j.members} members joined</p>
-                                                </div>
-                                                <div className="flex items-center gap-3">
-                                                    <Badge variant="secondary" className={j.color}>{j.status}</Badge>
-                                                    <Button size="sm" className="bg-primary text-primary-foreground text-xs">Join</Button>
-                                                </div>
-                                            </CardContent>
-                                        </Card>
+                                        <motion.div key={j.title} variants={itemVariants} whileHover={{ x: 5 }}>
+                                            <Card className="shadow-sm border-border/50">
+                                                <CardContent className="flex items-center justify-between p-4">
+                                                    <div>
+                                                        <h3 className="font-bold text-base">{j.title}</h3>
+                                                        <p className="text-xs text-muted-foreground mt-1">{j.members} members joined</p>
+                                                    </div>
+                                                    <div className="flex items-center gap-3">
+                                                        <Badge variant="secondary" className={j.color}>{j.status}</Badge>
+                                                        <Button size="sm" className="bg-primary text-primary-foreground text-xs hover:scale-105 transition-transform">Join</Button>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        </motion.div>
                                     ))}
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Right Sidebar */}
-                        <div className="space-y-6">
+                        <motion.div variants={itemVariants} className="space-y-6">
                             {/* Trending */}
                             <Card>
                                 <CardContent className="p-6">
@@ -157,10 +172,10 @@ export default function StudioPage() {
                                     </div>
                                 </CardContent>
                             </Card>
-                        </div>
+                        </motion.div>
                     </div>
-                </div>
+                </motion.div>
             </main>
-        </AppShell>
+        </AppShell >
     );
 }

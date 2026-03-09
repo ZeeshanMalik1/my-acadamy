@@ -4,6 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { motion, Variants } from "framer-motion";
+
+const container: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 const folders = [
     { name: "Algorithms CS101", desc: "CS Foundation Course", files: 24, updated: "2d ago", color: "bg-blue-100 text-blue-600", icon: "folder" },
@@ -61,42 +72,44 @@ export default function ResourcesPage() {
                     </Tabs>
                 </header>
 
-                <div className="flex-1 overflow-y-auto p-8 pt-6 space-y-8">
+                <motion.div variants={container} initial="hidden" animate="show" className="flex-1 overflow-y-auto p-8 pt-6 space-y-8">
                     {/* Course Folders */}
-                    <section>
+                    <motion.section variants={itemVariants}>
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold">Course Folders</h3>
-                            <Button variant="ghost" size="sm" className="text-primary">
+                            <Button variant="ghost" size="sm" className="text-primary hover:scale-105 transition-transform">
                                 View All <span className="material-symbols-outlined text-sm ml-1">arrow_forward</span>
                             </Button>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {folders.map((f) => (
-                                <Card key={f.name} className={`cursor-pointer hover:border-primary/50 transition-all ${f.active ? "border-primary bg-primary/5" : ""}`}>
-                                    <CardContent className="p-5">
-                                        <div className="flex justify-between items-start mb-4">
-                                            <div className={`size-12 rounded-xl flex items-center justify-center ${f.color}`}>
-                                                <span className="material-symbols-outlined text-3xl">{f.icon}</span>
+                                <motion.div key={f.name} whileHover={{ y: -5 }}>
+                                    <Card className={`cursor-pointer hover:shadow-lg transition-all h-full border-border/50 ${f.active ? "border-primary bg-primary/5" : ""}`}>
+                                        <CardContent className="p-5">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div className={`size-12 rounded-xl flex items-center justify-center ${f.color}`}>
+                                                    <span className="material-symbols-outlined text-3xl">{f.icon}</span>
+                                                </div>
+                                                <Button variant="ghost" size="icon" className="size-8">
+                                                    <span className={`material-symbols-outlined ${f.active ? "text-primary" : "text-muted-foreground"}`}>{f.active ? "star" : "more_vert"}</span>
+                                                </Button>
                                             </div>
-                                            <Button variant="ghost" size="icon" className="size-8">
-                                                <span className={`material-symbols-outlined ${f.active ? "text-primary" : "text-muted-foreground"}`}>{f.active ? "star" : "more_vert"}</span>
-                                            </Button>
-                                        </div>
-                                        <h4 className="font-bold text-lg mb-1">{f.name}</h4>
-                                        <p className="text-xs text-muted-foreground mb-4">{f.desc}</p>
-                                        <div className={`flex justify-between text-[11px] font-medium uppercase tracking-wider border-t pt-4 ${f.active ? "border-primary/10 text-primary" : "border-border text-muted-foreground"}`}>
-                                            <span>{f.files} Files</span>
-                                            <span>{f.updated}</span>
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                            <h4 className="font-bold text-lg mb-1">{f.name}</h4>
+                                            <p className="text-xs text-muted-foreground mb-4">{f.desc}</p>
+                                            <div className={`flex justify-between text-[11px] font-medium uppercase tracking-wider border-t pt-4 ${f.active ? "border-primary/10 text-primary" : "border-border text-muted-foreground"}`}>
+                                                <span>{f.files} Files</span>
+                                                <span>{f.updated}</span>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </motion.div>
                             ))}
                         </div>
-                    </section>
+                    </motion.section>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* File List */}
-                        <div className="lg:col-span-2">
+                        <motion.div variants={itemVariants} className="lg:col-span-2">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="text-xl font-bold flex items-center gap-2">
                                     <span className="material-symbols-outlined text-primary">folder_open</span>
@@ -119,7 +132,7 @@ export default function ResourcesPage() {
                                         </thead>
                                         <tbody className="divide-y divide-border/50">
                                             {files.map((f) => (
-                                                <tr key={f.name} className="hover:bg-muted/40 transition-colors">
+                                                <motion.tr variants={itemVariants} key={f.name} className="hover:bg-muted/40 transition-colors">
                                                     <td className="px-4 py-4">
                                                         <div className="flex items-center gap-3">
                                                             <span className={`material-symbols-outlined ${f.iconColor}`}>{f.icon}</span>
@@ -140,7 +153,7 @@ export default function ResourcesPage() {
                                                             </Button>
                                                         </div>
                                                     </td>
-                                                </tr>
+                                                </motion.tr>
                                             ))}
                                         </tbody>
                                     </table>
@@ -149,10 +162,10 @@ export default function ResourcesPage() {
                                     </div>
                                 </div>
                             </Card>
-                        </div>
+                        </motion.div>
 
                         {/* Widgets */}
-                        <div className="space-y-6">
+                        <motion.div variants={itemVariants} className="space-y-6">
                             {/* Upload */}
                             <div className="border-2 border-dashed border-primary/30 rounded-xl p-8 text-center hover:bg-primary/5 cursor-pointer group transition-colors">
                                 <div className="mb-4 inline-flex items-center justify-center size-16 rounded-full bg-primary/10 text-primary group-hover:scale-110 transition-transform">
@@ -193,9 +206,9 @@ export default function ResourcesPage() {
                                     <Button variant="outline" className="w-full mt-4 text-xs font-bold">Upgrade Storage</Button>
                                 </CardContent>
                             </Card>
-                        </div>
+                        </motion.div>
                     </div>
-                </div>
+                </motion.div>
             </main>
         </AppShell>
     );
