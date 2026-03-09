@@ -4,6 +4,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
+import { motion, Variants } from "framer-motion";
+
+const container: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const item: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 const stats = [
   {
@@ -55,10 +69,15 @@ const upcomingTasks = [
 export default function DashboardPage() {
   return (
     <AppShell>
-      <main className="flex-1 overflow-y-auto p-8">
-        <div className="max-w-6xl mx-auto space-y-8">
+      <main className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="max-w-6xl mx-auto space-y-8"
+        >
           {/* Header */}
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <motion.div variants={item} className="flex flex-wrap items-end justify-between gap-4">
             <div>
               <h1 className="text-3xl font-black tracking-tight">Command Center</h1>
               <p className="text-muted-foreground mt-1">Welcome back, Alex. You have 3 classes today.</p>
@@ -78,26 +97,32 @@ export default function DashboardPage() {
                 Add Task
               </Button>
             </div>
-          </div>
+          </motion.div>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats.map((s) => (
-              <Card key={s.label} className="relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-4 opacity-[0.07] group-hover:opacity-[0.12] transition-opacity">
-                  <span className="material-symbols-outlined text-6xl text-primary">{s.icon}</span>
-                </div>
-                <CardContent className="p-5">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{s.label}</p>
-                  <p className="text-3xl font-black mt-1">{s.value}</p>
-                  <p className={`text-sm font-bold flex items-center gap-0.5 mt-1 ${s.subColor}`}>
-                    <span className="material-symbols-outlined text-[14px]">{s.trend}</span>
-                    {s.sub}
-                  </p>
-                </CardContent>
-              </Card>
+          <motion.div variants={item} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {stats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              >
+                <Card className="relative overflow-hidden group h-full shadow-sm hover:shadow-md hover:border-primary/50 transition-all cursor-pointer">
+                  <div className="absolute top-0 right-0 p-4 opacity-[0.07] group-hover:opacity-[0.12] transition-opacity">
+                    <span className="material-symbols-outlined text-6xl text-primary">{s.icon}</span>
+                  </div>
+                  <CardContent className="p-5">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{s.label}</p>
+                    <p className="text-3xl font-black mt-1">{s.value}</p>
+                    <p className={`text-sm font-bold flex items-center gap-0.5 mt-1 ${s.subColor}`}>
+                      <span className="material-symbols-outlined text-[14px]">{s.trend}</span>
+                      {s.sub}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Today's Schedule */}
@@ -113,15 +138,17 @@ export default function DashboardPage() {
               </div>
               <div className="space-y-3">
                 {todayClasses.map((c) => (
-                  <Card key={c.course} className={`border-l-4 ${c.color}`}>
-                    <CardContent className="p-4 flex items-center justify-between">
-                      <div>
-                        <p className="font-bold">{c.course}</p>
-                        <p className="text-sm text-muted-foreground">{c.time} · {c.room}</p>
-                      </div>
-                      <Button variant="outline" size="sm">Join</Button>
-                    </CardContent>
-                  </Card>
+                  <motion.div key={c.course} whileHover={{ x: 5 }} transition={{ type: "spring", stiffness: 300, damping: 20 }}>
+                    <Card className={`border-l-4 ${c.color} hover:shadow-md transition-shadow`}>
+                      <CardContent className="p-4 flex items-center justify-between">
+                        <div>
+                          <p className="font-bold">{c.course}</p>
+                          <p className="text-sm text-muted-foreground">{c.time} · {c.room}</p>
+                        </div>
+                        <Button variant="outline" size="sm">Join</Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 ))}
               </div>
 
@@ -157,28 +184,30 @@ export default function DashboardPage() {
             </div>
 
             {/* Upcoming Deadlines */}
-            <div className="space-y-4">
+            <motion.div variants={item} className="space-y-4">
               <h2 className="text-xl font-bold flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary">priority_high</span>
                 Upcoming Deadlines
               </h2>
               <div className="space-y-3">
                 {upcomingTasks.map((t) => (
-                  <Card key={t.title} className="relative overflow-hidden">
-                    <div className={`absolute left-0 top-0 bottom-0 w-1 ${t.color}`} />
-                    <CardContent className="pl-5 p-4">
-                      <div className="flex justify-between items-start mb-1">
-                        <Badge
-                          variant="secondary"
-                          className={`text-[10px] font-bold uppercase ${t.color === "bg-rose-500" ? "bg-rose-50 text-rose-600" : t.color === "bg-primary" ? "bg-primary/10 text-primary" : "bg-blue-50 text-blue-600"}`}
-                        >
-                          {t.priority}
-                        </Badge>
-                        <span className="text-xs text-muted-foreground">{t.due}</span>
-                      </div>
-                      <p className="font-bold text-sm">{t.title}</p>
-                    </CardContent>
-                  </Card>
+                  <motion.div key={t.title} whileHover={{ scale: 1.02 }} transition={{ type: "spring", stiffness: 400 }}>
+                    <Card className="relative overflow-hidden hover:shadow-md transition-all cursor-pointer">
+                      <div className={`absolute left-0 top-0 bottom-0 w-1 ${t.color}`} />
+                      <CardContent className="pl-5 p-4">
+                        <div className="flex justify-between items-start mb-1">
+                          <Badge
+                            variant="secondary"
+                            className={`text-[10px] font-bold uppercase ${t.color === "bg-rose-500" ? "bg-rose-50 text-rose-600" : t.color === "bg-primary" ? "bg-primary/10 text-primary" : "bg-blue-50 text-blue-600"}`}
+                          >
+                            {t.priority}
+                          </Badge>
+                          <span className="text-xs text-muted-foreground">{t.due}</span>
+                        </div>
+                        <p className="font-bold text-sm">{t.title}</p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
                 ))}
               </div>
 
@@ -195,9 +224,9 @@ export default function DashboardPage() {
                   </p>
                 </CardContent>
               </Card>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </main>
     </AppShell>
   );

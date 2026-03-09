@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Public_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from '@/app/components/ThemeProvider';
 
-const publicSans = Public_Sans({
+const font = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -27,7 +27,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=auto"
         />
       </head>
-      <body className={`${publicSans.variable} antialiased`}>
+      <body className={`${font.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 
@@ -34,29 +33,29 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-screen w-64 shrink-0 flex-col border-r border-border bg-card">
+    <aside className="flex h-screen w-56 shrink-0 flex-col border-r border-border bg-card">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-6 py-4">
-        <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-          <span className="material-symbols-outlined text-[18px]">school</span>
+      <div className="flex items-center gap-3 px-5 py-4 shrink-0">
+        <div className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+          <span className="material-symbols-outlined text-[16px]">school</span>
         </div>
-        <h2 className="text-lg font-bold tracking-tight">AcadHQ</h2>
+        <h2 className="text-[15px] font-black tracking-tight">AcadHQ</h2>
       </div>
 
       {/* User Profile */}
-      <Link href="/profile" className={cn("mx-4 mb-4 flex items-center gap-3 rounded-xl p-3 transition-colors", pathname === "/profile" ? "bg-primary/10 text-primary" : "bg-muted hover:bg-muted/80")}>
-        <Avatar className="size-10">
+      <Link href="/profile" className={cn("mx-3 mb-3 flex items-center gap-2.5 rounded-xl p-2.5 transition-colors shrink-0", pathname === "/profile" ? "bg-primary/10 text-primary" : "bg-muted hover:bg-muted/80")}>
+        <Avatar className="size-8 shadow-sm">
           <AvatarImage src="https://i.pravatar.cc/150?img=3" alt="Alex Morgan" />
-          <AvatarFallback className="bg-primary text-primary-foreground font-bold">AM</AvatarFallback>
+          <AvatarFallback className="bg-primary text-primary-foreground font-bold text-[10px]">AM</AvatarFallback>
         </Avatar>
         <div className="flex flex-col overflow-hidden text-foreground">
-          <span className="truncate text-sm font-bold">Alex Morgan</span>
-          <span className="truncate text-xs text-muted-foreground">Computer Science</span>
+          <span className="truncate text-xs font-bold leading-tight">Alex Morgan</span>
+          <span className="truncate text-[10px] text-muted-foreground">Computer Science</span>
         </div>
       </Link>
 
       {/* Navigation */}
-      <ScrollArea className="flex-1 px-3">
+      <div className="flex-1 px-3 overflow-y-auto custom-scrollbar">
         <nav className="space-y-0.5">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
@@ -65,18 +64,18 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                  "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold transition-colors mb-0.5",
                   isActive
                     ? "bg-primary/10 text-primary"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
-                <span className="material-symbols-outlined text-[20px]">
+                <span className="material-symbols-outlined text-[18px]">
                   {item.icon}
                 </span>
-                <span className="flex-1">{item.label}</span>
+                <span className="flex-1 truncate">{item.label}</span>
                 {item.badge && (
-                  <Badge className="bg-primary text-primary-foreground text-[10px] h-5 min-w-5 px-1.5">
+                  <Badge className="bg-primary text-primary-foreground text-[9px] h-4 min-w-[16px] px-1 rounded-sm shadow-sm">
                     {item.badge}
                   </Badge>
                 )}
@@ -84,22 +83,20 @@ export default function Sidebar() {
             );
           })}
         </nav>
-      </ScrollArea>
+      </div>
 
-      <div className="p-4 space-y-3">
+      <div className="p-3 space-y-3 shrink-0 border-t border-border mt-2">
         {/* AI Assistant Card */}
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-3">
-          <div className="flex items-center gap-2 mb-1.5 text-primary">
-            <span className="material-symbols-outlined text-[16px]">smart_toy</span>
-            <span className="text-xs font-bold">AI Assistant</span>
+        <div className="rounded-xl border border-primary/20 bg-primary/5 p-2.5">
+          <div className="flex items-center gap-1.5 mb-1 text-primary">
+            <span className="material-symbols-outlined text-[14px]">smart_toy</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">AI Assistant</span>
           </div>
-          <p className="text-xs text-muted-foreground mb-2">Ask about your syllabus or notes.</p>
-          <Button variant="outline" size="sm" className="w-full h-7 text-xs border-primary/30 text-primary hover:bg-primary/10">
+          <p className="text-[10px] text-muted-foreground mb-2 leading-tight">Ask about syllabus or notes.</p>
+          <Button variant="outline" size="sm" className="w-full h-6 text-[10px] font-bold border-primary/30 text-primary hover:bg-primary/10 px-2 shadow-sm">
             Chat Now
           </Button>
         </div>
-
-        <Separator />
 
         {/* Bottom nav */}
         <nav className="space-y-0.5">
@@ -107,9 +104,9 @@ export default function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              className="flex items-center gap-2.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
             >
-              <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
+              <span className="material-symbols-outlined text-[18px]">{item.icon}</span>
               {item.label}
             </Link>
           ))}

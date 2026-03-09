@@ -4,6 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { motion, Variants } from "framer-motion";
+
+const container: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 const kanbanTasks = {
     todo: [
@@ -35,23 +46,25 @@ export default function TasksPage() {
             <main className="flex-1 flex overflow-hidden">
                 {/* Left Sidebar */}
                 <aside className="w-60 border-r p-6 flex flex-col gap-8">
-                    <div className="flex flex-col gap-2">
-                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-3 mb-2">Main Menu</p>
+                    <motion.div variants={container} initial="hidden" animate="show" className="flex flex-col gap-2">
+                        <motion.p variants={itemVariants} className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-3 mb-2">Main Menu</motion.p>
                         {[
                             { icon: "dashboard", label: "Dashboard" },
                             { icon: "check_circle", label: "Tasks & Focus", active: true },
                             { icon: "auto_stories", label: "Projects" },
                             { icon: "calendar_month", label: "Calendar" },
                         ].map((item) => (
-                            <div
+                            <motion.div
+                                variants={itemVariants}
+                                whileHover={{ x: 4, backgroundColor: "var(--muted)" }}
                                 key={item.label}
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold cursor-pointer ${item.active ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground hover:bg-muted"}`}
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-colors ${item.active ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground"}`}
                             >
                                 <span className="material-symbols-outlined text-[20px]">{item.icon}</span>
                                 {item.label}
-                            </div>
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
 
                     {/* Daily Focus */}
                     <div className="bg-muted rounded-xl p-4 border">
@@ -77,7 +90,7 @@ export default function TasksPage() {
                                 </Button>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-6">
+                            <motion.div variants={container} initial="hidden" animate="show" className="grid grid-cols-3 gap-6">
                                 {/* To Do */}
                                 <div>
                                     <div className="flex items-center gap-2 mb-4 px-1">
@@ -87,19 +100,21 @@ export default function TasksPage() {
                                     </div>
                                     <div className="space-y-3">
                                         {kanbanTasks.todo.map((t) => (
-                                            <Card key={t.id}>
-                                                <CardContent className="p-4">
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <Badge variant="secondary" className={`text-[10px] font-black uppercase ${t.tagColor}`}>{t.tag}</Badge>
-                                                        <span className="material-symbols-outlined text-muted-foreground/40 text-sm">more_horiz</span>
-                                                    </div>
-                                                    <p className="font-bold text-sm mb-3">{t.title}</p>
-                                                    <div className="flex items-center text-muted-foreground text-[11px]">
-                                                        <span className="material-symbols-outlined text-xs mr-1">calendar_today</span>
-                                                        {t.due}
-                                                    </div>
-                                                </CardContent>
-                                            </Card>
+                                            <motion.div key={t.id} variants={itemVariants} whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                                                <Card className="cursor-grab hover:shadow-md transition-shadow">
+                                                    <CardContent className="p-4">
+                                                        <div className="flex justify-between items-start mb-2">
+                                                            <Badge variant="secondary" className={`text-[10px] font-black uppercase ${t.tagColor}`}>{t.tag}</Badge>
+                                                            <span className="material-symbols-outlined text-muted-foreground/40 text-sm">more_horiz</span>
+                                                        </div>
+                                                        <p className="font-bold text-sm mb-3">{t.title}</p>
+                                                        <div className="flex items-center text-muted-foreground text-[11px]">
+                                                            <span className="material-symbols-outlined text-xs mr-1">calendar_today</span>
+                                                            {t.due}
+                                                        </div>
+                                                    </CardContent>
+                                                </Card>
+                                            </motion.div>
                                         ))}
                                     </div>
                                 </div>
@@ -113,21 +128,23 @@ export default function TasksPage() {
                                     </div>
                                     <div className="space-y-3">
                                         {kanbanTasks.inProgress.map((t) => (
-                                            <Card key={t.id} className="border-2 border-primary shadow-lg ring-4 ring-primary/5">
-                                                <CardContent className="p-4">
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <Badge variant="secondary" className={`text-[10px] font-black uppercase ${t.tagColor}`}>{t.tag}</Badge>
-                                                        <span className="material-symbols-outlined text-primary text-sm">bolt</span>
-                                                    </div>
-                                                    <p className="font-bold text-sm mb-3">{t.title}</p>
-                                                    <div className="flex items-center text-muted-foreground text-[11px] mb-2">
-                                                        <span className="material-symbols-outlined text-xs mr-1">calendar_today</span>
-                                                        {t.due}
-                                                    </div>
-                                                    <Progress value={t.progress} className="h-1.5 mb-1" />
-                                                    <p className="text-[10px] font-bold text-muted-foreground text-right">{t.progress}% complete</p>
-                                                </CardContent>
-                                            </Card>
+                                            <motion.div key={t.id} variants={itemVariants} whileHover={{ y: -4, scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                                                <Card className="border-2 border-primary shadow-lg ring-4 ring-primary/5 cursor-grab">
+                                                    <CardContent className="p-4">
+                                                        <div className="flex justify-between items-start mb-2">
+                                                            <Badge variant="secondary" className={`text-[10px] font-black uppercase ${t.tagColor}`}>{t.tag}</Badge>
+                                                            <span className="material-symbols-outlined text-primary text-sm">bolt</span>
+                                                        </div>
+                                                        <p className="font-bold text-sm mb-3">{t.title}</p>
+                                                        <div className="flex items-center text-muted-foreground text-[11px] mb-2">
+                                                            <span className="material-symbols-outlined text-xs mr-1">calendar_today</span>
+                                                            {t.due}
+                                                        </div>
+                                                        <Progress value={t.progress} className="h-1.5 mb-1" />
+                                                        <p className="text-[10px] font-bold text-muted-foreground text-right">{t.progress}% complete</p>
+                                                    </CardContent>
+                                                </Card>
+                                            </motion.div>
                                         ))}
                                     </div>
                                 </div>
@@ -141,26 +158,33 @@ export default function TasksPage() {
                                     </div>
                                     <div className="opacity-60 grayscale-[0.5] space-y-3">
                                         {kanbanTasks.done.map((t) => (
-                                            <Card key={t.id}>
-                                                <CardContent className="p-4">
-                                                    <div className="flex justify-between items-start mb-2">
-                                                        <Badge variant="secondary" className={`text-[10px] font-black uppercase ${t.tagColor}`}>{t.tag}</Badge>
-                                                        <span className="material-symbols-outlined text-emerald-500 text-sm">check_circle</span>
-                                                    </div>
-                                                    <p className="font-bold text-sm mb-3 line-through">{t.title}</p>
-                                                    <p className="text-muted-foreground text-[11px]">{t.due}</p>
-                                                </CardContent>
-                                            </Card>
+                                            <motion.div key={t.id} variants={itemVariants} whileHover={{ y: -2, scale: 1.01 }} whileTap={{ scale: 0.98 }}>
+                                                <Card className="cursor-grab">
+                                                    <CardContent className="p-4">
+                                                        <div className="flex justify-between items-start mb-2">
+                                                            <Badge variant="secondary" className={`text-[10px] font-black uppercase ${t.tagColor}`}>{t.tag}</Badge>
+                                                            <span className="material-symbols-outlined text-emerald-500 text-sm">check_circle</span>
+                                                        </div>
+                                                        <p className="font-bold text-sm mb-3 line-through">{t.title}</p>
+                                                        <p className="text-muted-foreground text-[11px]">{t.due}</p>
+                                                    </CardContent>
+                                                </Card>
+                                            </motion.div>
                                         ))}
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
 
                         {/* Focus Widget */}
                         <div className="lg:col-span-4 flex flex-col gap-6">
                             {/* Pomodoro Timer */}
-                            <div className="bg-[#221610] text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden group">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
+                                className="bg-[#221610] text-white rounded-3xl p-8 shadow-2xl relative overflow-hidden group"
+                            >
                                 <div className="absolute top-0 right-0 p-4 opacity-20">
                                     <span className="material-symbols-outlined text-6xl">timer</span>
                                 </div>
@@ -174,21 +198,21 @@ export default function TasksPage() {
                                         <span className="text-7xl font-black tracking-tighter">00</span>
                                     </div>
                                     <div className="flex gap-4 w-full">
-                                        <Button className="flex-1 h-14 bg-primary hover:bg-primary/90">
+                                        <Button className="flex-1 h-14 bg-primary hover:bg-primary/90 transition-transform hover:scale-[1.02] active:scale-[0.98]">
                                             <span className="material-symbols-outlined mr-2">play_arrow</span>
                                             Start Session
                                         </Button>
-                                        <Button variant="ghost" size="icon" className="size-14 bg-white/10 hover:bg-white/20 text-white rounded-2xl">
+                                        <Button variant="ghost" size="icon" className="size-14 bg-white/10 hover:bg-white/20 text-white rounded-2xl hover:rotate-180 transition-all duration-500">
                                             <span className="material-symbols-outlined">restart_alt</span>
                                         </Button>
                                     </div>
                                     <div className="flex gap-4 text-xs font-bold">
                                         <button className="text-primary underline">Pomodoro</button>
-                                        <button className="text-white/50 hover:text-white">Short Break</button>
-                                        <button className="text-white/50 hover:text-white">Long Break</button>
+                                        <button className="text-white/50 hover:text-white transition-colors">Short Break</button>
+                                        <button className="text-white/50 hover:text-white transition-colors">Long Break</button>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
 
                             {/* Soundscapes */}
                             <Card>

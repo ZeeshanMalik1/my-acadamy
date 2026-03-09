@@ -4,6 +4,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
+import { motion, Variants } from "framer-motion";
+
+const container: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 const kpis = [
     { label: "Monthly Budget", value: "$1,250", sub: "$450 remaining", subColor: "text-emerald-600", icon: "account_balance_wallet", iconBg: "bg-primary/10 text-primary" },
@@ -29,20 +40,20 @@ export default function FinancePage() {
     return (
         <AppShell>
             <main className="flex-1 overflow-y-auto p-8">
-                <div className="max-w-6xl mx-auto space-y-8">
-                    <div className="flex justify-between items-end">
+                <motion.div variants={container} initial="hidden" animate="show" className="max-w-6xl mx-auto space-y-8">
+                    <motion.div variants={itemVariants} className="flex justify-between items-end">
                         <div>
                             <h1 className="text-3xl font-black tracking-tight">Opportunities & Finance</h1>
                             <p className="text-muted-foreground mt-1">Track scholarships, grants, and your budget in one place.</p>
                         </div>
-                        <Button className="bg-primary text-primary-foreground">
+                        <Button className="bg-primary text-primary-foreground shadow-sm hover:scale-[1.02] transition-transform">
                             <span className="material-symbols-outlined mr-2">add_circle</span>
                             Monitor New Grant
                         </Button>
-                    </div>
+                    </motion.div>
 
                     {/* KPI Cards */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {kpis.map((k) => (
                             <Card key={k.label}>
                                 <CardContent className="p-6">
@@ -55,9 +66,9 @@ export default function FinancePage() {
                                 </CardContent>
                             </Card>
                         ))}
-                    </div>
+                    </motion.div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                         {/* Scholarship Tracker */}
                         <section className="lg:col-span-3 space-y-4">
                             <div className="flex items-center justify-between">
@@ -84,7 +95,7 @@ export default function FinancePage() {
                                         </thead>
                                         <tbody className="divide-y">
                                             {scholarships.map((s) => (
-                                                <tr key={s.name} className="hover:bg-muted/30 transition-colors">
+                                                <motion.tr variants={itemVariants} key={s.name} className="hover:bg-muted/30 transition-colors">
                                                     <td className="p-4 font-semibold text-sm max-w-[200px]">
                                                         <p className="truncate">{s.name}</p>
                                                     </td>
@@ -100,7 +111,7 @@ export default function FinancePage() {
                                                             <span className="material-symbols-outlined text-lg">more_vert</span>
                                                         </Button>
                                                     </td>
-                                                </tr>
+                                                </motion.tr>
                                             ))}
                                         </tbody>
                                     </table>
@@ -162,8 +173,8 @@ export default function FinancePage() {
                                 </CardContent>
                             </Card>
                         </section>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </main>
         </AppShell>
     );

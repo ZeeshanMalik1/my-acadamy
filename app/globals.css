@@ -159,7 +159,8 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-[14px];
+    /* Slightly smaller UI base scale */
   }
 
   html {
@@ -167,7 +168,25 @@
   }
 }
 
-/* Scrollbar hide utility */
+/* Custom scrollbar utility */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 10px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: var(--muted-foreground);
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

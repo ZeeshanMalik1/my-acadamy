@@ -5,6 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
+import { motion, Variants } from "framer-motion";
+
+const container: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 const contributors = [
     { name: "Alex Johnson", pct: 42, avatar: "https://i.pravatar.cc/150?img=7" },
@@ -59,39 +70,41 @@ export default function CollaborationPage() {
 
                 {/* Main content */}
                 <main className="flex-1 overflow-y-auto bg-muted/20 p-6">
-                    <div className="max-w-4xl mx-auto space-y-8">
+                    <motion.div variants={container} initial="hidden" animate="show" className="max-w-4xl mx-auto space-y-8">
                         {/* Stats */}
-                        <div className="grid grid-cols-3 gap-6">
+                        <motion.div variants={itemVariants} className="grid grid-cols-3 gap-6">
                             {[
                                 { label: "Total Milestones", value: "12", badge: "85% Complete", badgeClass: "bg-emerald-100 text-emerald-700", icon: "video_call", barPct: 85 },
                                 { label: "Next Sync", value: "Today, 4:00 PM", icon: "video_call", sub: "Main Zoom Room · Group 4" },
                                 { label: "Days to Submission", value: "04", icon: "alarm", sub: "Phase 2 Deadline approaching", subColor: "text-orange-600" },
                             ].map((s, i) => (
-                                <Card key={i}>
-                                    <CardContent className="p-6">
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <p className="text-muted-foreground text-sm">{s.label}</p>
-                                                <h3 className="text-2xl font-extrabold mt-1">{s.value}</h3>
-                                            </div>
-                                            {s.badge ? (
-                                                <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 text-xs">{s.badge}</Badge>
-                                            ) : (
-                                                <div className={`p-2 rounded-lg ${i === 1 ? "bg-primary/10 text-primary" : "bg-orange-100 text-orange-600"}`}>
-                                                    <span className="material-symbols-outlined">{s.icon}</span>
+                                <motion.div key={i} whileHover={{ y: -5 }}>
+                                    <Card className="hover:shadow-md transition-shadow h-full border-border/50">
+                                        <CardContent className="p-6">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <p className="text-muted-foreground text-sm">{s.label}</p>
+                                                    <h3 className="text-2xl font-extrabold mt-1">{s.value}</h3>
                                                 </div>
-                                            )}
-                                        </div>
-                                        {s.barPct && <Progress value={s.barPct} className="h-1.5 mt-4" />}
-                                        {s.sub && <p className={`text-xs mt-2 ${s.subColor || "text-muted-foreground"} ${s.subColor ? "font-bold italic" : ""}`}>{s.sub}</p>}
-                                    </CardContent>
-                                </Card>
+                                                {s.badge ? (
+                                                    <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 text-xs">{s.badge}</Badge>
+                                                ) : (
+                                                    <div className={`p-2 rounded-lg ${i === 1 ? "bg-primary/10 text-primary" : "bg-orange-100 text-orange-600"}`}>
+                                                        <span className="material-symbols-outlined">{s.icon}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {s.barPct && <Progress value={s.barPct} className="h-1.5 mt-4" />}
+                                            {s.sub && <p className={`text-xs mt-2 ${s.subColor || "text-muted-foreground"} ${s.subColor ? "font-bold italic" : ""}`}>{s.sub}</p>}
+                                        </CardContent>
+                                    </Card>
+                                </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
 
                         <div className="grid grid-cols-2 gap-8">
                             {/* Contribution Tracker */}
-                            <section className="space-y-4">
+                            <motion.section variants={itemVariants} className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-xl font-bold flex items-center gap-2">
                                         <span className="material-symbols-outlined text-primary">analytics</span>
@@ -126,10 +139,10 @@ export default function CollaborationPage() {
                                         </div>
                                     </CardContent>
                                 </Card>
-                            </section>
+                            </motion.section>
 
                             {/* Document Repo */}
-                            <section className="space-y-4">
+                            <motion.section variants={itemVariants} className="space-y-4">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-xl font-bold flex items-center gap-2">
                                         <span className="material-symbols-outlined text-primary">cloud_done</span>
@@ -154,13 +167,13 @@ export default function CollaborationPage() {
                                         </div>
                                     ))}
                                 </Card>
-                            </section>
+                            </motion.section>
                         </div>
-                    </div>
+                    </motion.div>
                 </main>
 
                 {/* Group Chat sidebar */}
-                <aside className="w-80 border-l bg-card flex flex-col shrink-0">
+                <motion.aside variants={itemVariants} initial="hidden" animate="show" className="w-80 border-l bg-card flex flex-col shrink-0">
                     <div className="p-4 border-b flex justify-between items-center">
                         <h3 className="font-bold flex items-center gap-2">
                             <span className="material-symbols-outlined text-primary">chat_bubble</span>
@@ -201,7 +214,7 @@ export default function CollaborationPage() {
                             ))}
                         </div>
                     </div>
-                </aside>
+                </motion.aside>
             </div>
         </AppShell>
     );

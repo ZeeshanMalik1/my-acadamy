@@ -4,6 +4,17 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { motion, Variants } from "framer-motion";
+
+const container: Variants = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 const channels = [
     { name: "Campus-Life", active: true },
@@ -133,37 +144,39 @@ export default function ChatPage() {
                                 <div className="flex-grow border-t border-border" />
                             </div>
 
-                            {messages.map((m, i) => (
-                                <div key={i} className={`flex items-start gap-4 ${m.isMe ? "flex-row-reverse" : ""}`}>
-                                    <Avatar className="size-10 mt-1 shrink-0">
-                                        <AvatarImage src={m.avatar} />
-                                        <AvatarFallback>{m.sender[0]}</AvatarFallback>
-                                    </Avatar>
-                                    <div className={`space-y-1 ${m.isMe ? "flex flex-col items-end" : ""}`}>
-                                        <div className={`flex items-baseline gap-2 ${m.isMe ? "flex-row-reverse" : ""}`}>
-                                            <span className="font-bold text-sm">{m.sender}</span>
-                                            <span className="text-[10px] text-muted-foreground">{m.time}</span>
-                                        </div>
-
-                                        <div className={`p-4 shadow-sm max-w-xl text-sm leading-relaxed ${m.isMe ? "bg-primary text-primary-foreground rounded-l-2xl rounded-br-2xl" : "bg-card border rounded-r-2xl rounded-bl-2xl"}`}>
-                                            {m.text}
-                                        </div>
-
-                                        {m.attachment && (
-                                            <div className="bg-card border rounded-xl p-3 flex items-center gap-4 mt-2 max-w-sm shadow-sm hover:border-primary transition-colors cursor-pointer group">
-                                                <div className="size-12 rounded-lg bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center text-rose-500 shrink-0">
-                                                    <span className="material-symbols-outlined text-3xl">description</span>
-                                                </div>
-                                                <div className="flex-1 overflow-hidden">
-                                                    <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors">{m.attachment.name}</p>
-                                                    <p className="text-[10px] text-muted-foreground mt-0.5">{m.attachment.size} • {m.attachment.type}</p>
-                                                </div>
-                                                <span className="material-symbols-outlined text-muted-foreground group-hover:text-primary transition-colors">download</span>
+                            <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
+                                {messages.map((m, i) => (
+                                    <motion.div variants={itemVariants} key={i} className={`flex items-start gap-4 ${m.isMe ? "flex-row-reverse" : ""}`}>
+                                        <Avatar className="size-10 mt-1 shrink-0">
+                                            <AvatarImage src={m.avatar} />
+                                            <AvatarFallback>{m.sender[0]}</AvatarFallback>
+                                        </Avatar>
+                                        <div className={`space-y-1 ${m.isMe ? "flex flex-col items-end" : ""}`}>
+                                            <div className={`flex items-baseline gap-2 ${m.isMe ? "flex-row-reverse" : ""}`}>
+                                                <span className="font-bold text-sm">{m.sender}</span>
+                                                <span className="text-[10px] text-muted-foreground">{m.time}</span>
                                             </div>
-                                        )}
-                                    </div>
-                                </div>
-                            ))}
+
+                                            <div className={`p-4 shadow-sm max-w-xl text-sm leading-relaxed ${m.isMe ? "bg-primary text-primary-foreground rounded-l-2xl rounded-br-2xl" : "bg-card border rounded-r-2xl rounded-bl-2xl"}`}>
+                                                {m.text}
+                                            </div>
+
+                                            {m.attachment && (
+                                                <div className="bg-card border rounded-xl p-3 flex items-center gap-4 mt-2 max-w-sm shadow-sm hover:border-primary transition-colors cursor-pointer group">
+                                                    <div className="size-12 rounded-lg bg-rose-50 dark:bg-rose-900/20 flex items-center justify-center text-rose-500 shrink-0">
+                                                        <span className="material-symbols-outlined text-3xl">description</span>
+                                                    </div>
+                                                    <div className="flex-1 overflow-hidden">
+                                                        <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors">{m.attachment.name}</p>
+                                                        <p className="text-[10px] text-muted-foreground mt-0.5">{m.attachment.size} • {m.attachment.type}</p>
+                                                    </div>
+                                                    <span className="material-symbols-outlined text-muted-foreground group-hover:text-primary transition-colors">download</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </motion.div>
                         </div>
                     </ScrollArea>
 
@@ -201,9 +214,9 @@ export default function ChatPage() {
                                     <h3 className="font-bold text-sm">Study Buddies</h3>
                                     <Badge variant="secondary" className="text-[10px] font-bold text-primary bg-primary/10 uppercase tracking-widest">12 Online</Badge>
                                 </div>
-                                <div className="space-y-4">
+                                <motion.div variants={container} initial="hidden" animate="show" className="space-y-4">
                                     {studyBuddies.map((buddy) => (
-                                        <div key={buddy.name} className="flex items-center gap-3 group cursor-pointer">
+                                        <motion.div variants={itemVariants} key={buddy.name} className="flex items-center gap-3 group cursor-pointer hover:bg-muted/50 p-2 -mx-2 rounded-xl transition-colors">
                                             <div className="relative size-10 shrink-0">
                                                 <Avatar className="size-full rounded-xl">
                                                     <AvatarImage src={buddy.img} />
@@ -216,9 +229,9 @@ export default function ChatPage() {
                                                 <p className="text-[11px] text-muted-foreground truncate">{buddy.status}</p>
                                             </div>
                                             <span className="material-symbols-outlined text-muted-foreground text-sm opacity-0 group-hover:opacity-100 transition-opacity">more_horiz</span>
-                                        </div>
+                                        </motion.div>
                                     ))}
-                                </div>
+                                </motion.div>
                                 <Button variant="link" className="w-full mt-2 text-xs text-muted-foreground hover:text-primary">View All Buddies</Button>
                             </section>
 
@@ -227,18 +240,20 @@ export default function ChatPage() {
                             {/* Trending Topics */}
                             <section>
                                 <h3 className="font-bold text-sm mb-4">Trending Campus Topics</h3>
-                                <div className="space-y-3">
+                                <motion.div variants={container} initial="hidden" animate="show" className="space-y-3">
                                     {trending.map((item, i) => (
-                                        <div key={i} className="bg-muted/50 p-4 rounded-xl border border-transparent hover:border-primary/20 hover:bg-muted transition-all cursor-pointer group">
-                                            <p className="text-[10px] font-bold text-primary uppercase mb-1 tracking-widest">{item.tag}</p>
-                                            <h4 className="text-sm font-bold group-hover:text-primary transition-colors">{item.title}</h4>
-                                            <div className="flex items-center gap-1.5 mt-2">
-                                                <span className="material-symbols-outlined text-xs text-muted-foreground">{item.icon}</span>
-                                                <span className="text-[10px] text-muted-foreground font-medium">{item.metric}</span>
+                                        <motion.div variants={itemVariants} key={i} whileHover={{ y: -3 }}>
+                                            <div className="bg-muted/50 p-4 rounded-xl border border-transparent hover:border-primary/20 hover:bg-muted transition-all cursor-pointer group h-full">
+                                                <p className="text-[10px] font-bold text-primary uppercase mb-1 tracking-widest">{item.tag}</p>
+                                                <h4 className="text-sm font-bold group-hover:text-primary transition-colors">{item.title}</h4>
+                                                <div className="flex items-center gap-1.5 mt-2">
+                                                    <span className="material-symbols-outlined text-xs text-muted-foreground">{item.icon}</span>
+                                                    <span className="text-[10px] text-muted-foreground font-medium">{item.metric}</span>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     ))}
-                                </div>
+                                </motion.div>
                             </section>
 
                             {/* Call to Action */}
