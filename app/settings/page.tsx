@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
+import { useColorTheme } from "@/app/components/ThemeProvider";
 import gsap from "gsap";
 import AppShell from "@/app/components/AppShell";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -11,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 export default function SettingsPage() {
     const { theme, setTheme } = useTheme();
+    const { colorTheme, setColorTheme } = useColorTheme();
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -105,39 +107,104 @@ export default function SettingsPage() {
 
                         {/* Appearance / Multi Theme Controller */}
                         <section className="settings-block">
-                            <div className="mb-6">
-                                <h3 className="text-xl font-bold">Appearance</h3>
-                                <p className="text-sm text-muted-foreground">Customize the look and feel of your workspace.</p>
+                            <div className="mb-6 flex items-center justify-between">
+                                <div>
+                                    <h3 className="text-xl font-bold">Appearance</h3>
+                                    <p className="text-sm text-muted-foreground">Customize the look and feel of your workspace.</p>
+                                </div>
+                                <div className="flex bg-muted p-1 rounded-lg">
+                                    <button
+                                        onClick={() => setTheme("light")}
+                                        className={`px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all ${theme !== "dark" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                                    >
+                                        <span className="material-symbols-outlined text-[14px]">light_mode</span>
+                                        Light
+                                    </button>
+                                    <button
+                                        onClick={() => setTheme("dark")}
+                                        className={`px-4 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-all ${theme === "dark" ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+                                    >
+                                        <span className="material-symbols-outlined text-[14px]">dark_mode</span>
+                                        Dark
+                                    </button>
+                                </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <button
-                                    onClick={() => setTheme("light")}
-                                    className={`p-4 border-2 rounded-xl text-left flex items-center gap-4 transition-all ${theme === "light" ? "border-primary bg-card" : "border-border bg-card hover:border-border/80"}`}
-                                >
-                                    <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
-                                        <span className="material-symbols-outlined">light_mode</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="text-sm font-bold">Light Mode</p>
-                                        <p className="text-[10px] text-muted-foreground">Clean and bright</p>
-                                    </div>
-                                    {theme === "light" && <span className="material-symbols-outlined text-primary">check_circle</span>}
-                                </button>
+                            <div className="mb-4">
+                                <h4 className="text-sm font-bold mb-4">Theme Templates</h4>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {/* Default Orange */}
+                                    <button
+                                        onClick={() => setColorTheme('')}
+                                        className={`relative p-4 border rounded-xl text-left transition-colors bg-card flex flex-col gap-4 group ${colorTheme === '' ? 'border-primary ring-1 ring-primary' : 'border-border hover:border-primary/50'}`}
+                                    >
+                                        <div className="flex items-center justify-between w-full">
+                                            <p className="text-sm font-bold">Default Light</p>
+                                            {colorTheme === '' && <span className="material-symbols-outlined text-[16px] text-primary">check_circle</span>}
+                                        </div>
+                                        <p className="text-[10px] text-muted-foreground -mt-3">Warm student-focused theme</p>
+                                        <div className="w-full flex gap-2">
+                                            <div style={{ backgroundColor: '#ec5b13' }} className="h-6 flex-1 rounded shadow-sm"></div>
+                                            <div style={{ backgroundColor: '#ffffff' }} className="h-6 flex-[2] rounded shadow-sm border border-border/50"></div>
+                                            <div style={{ backgroundColor: '#f1f5f9' }} className="h-6 flex-[2] rounded shadow-sm"></div>
+                                            <div style={{ backgroundColor: '#e2e8f0' }} className="h-6 flex-[2] rounded shadow-sm"></div>
+                                        </div>
+                                    </button>
 
-                                <button
-                                    onClick={() => setTheme("dark")}
-                                    className={`p-4 border-2 rounded-xl text-left flex items-center gap-4 transition-all ${theme === "dark" || theme === "system" ? "border-primary bg-card" : "border-border bg-card hover:border-border/80"}`}
-                                >
-                                    <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-200">
-                                        <span className="material-symbols-outlined">dark_mode</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <p className="text-sm font-bold">Dark Mode</p>
-                                        <p className="text-[10px] text-muted-foreground">Easy on the eyes</p>
-                                    </div>
-                                    {(theme === "dark" || theme === "system") && <span className="material-symbols-outlined text-primary">check_circle</span>}
-                                </button>
+                                    {/* Blue Template */}
+                                    <button
+                                        onClick={() => setColorTheme('blue')}
+                                        className={`relative p-4 border rounded-xl text-left transition-colors bg-card flex flex-col gap-4 group ${colorTheme === 'blue' ? 'border-blue-500 ring-1 ring-blue-500' : 'border-border hover:border-blue-500/50'}`}
+                                    >
+                                        <div className="flex items-center justify-between w-full">
+                                            <p className="text-sm font-bold">Blue Light</p>
+                                            {colorTheme === 'blue' && <span className="material-symbols-outlined text-[16px] text-blue-500">check_circle</span>}
+                                        </div>
+                                        <p className="text-[10px] text-muted-foreground -mt-3">Clean theme with oceanic accents</p>
+                                        <div className="w-full flex gap-2">
+                                            <div style={{ backgroundColor: '#3b82f6' }} className="h-6 flex-1 rounded shadow-sm"></div>
+                                            <div style={{ backgroundColor: '#ffffff' }} className="h-6 flex-[2] rounded shadow-sm border border-border/50"></div>
+                                            <div style={{ backgroundColor: '#eff6ff' }} className="h-6 flex-[2] rounded shadow-sm"></div>
+                                            <div style={{ backgroundColor: '#dbeafe' }} className="h-6 flex-[2] rounded shadow-sm"></div>
+                                        </div>
+                                    </button>
+
+                                    {/* Green Template */}
+                                    <button
+                                        onClick={() => setColorTheme('green')}
+                                        className={`relative p-4 border rounded-xl text-left transition-colors bg-card flex flex-col gap-4 group ${colorTheme === 'green' ? 'border-green-500 ring-1 ring-green-500' : 'border-border hover:border-green-500/50'}`}
+                                    >
+                                        <div className="flex items-center justify-between w-full">
+                                            <p className="text-sm font-bold">Green Light</p>
+                                            {colorTheme === 'green' && <span className="material-symbols-outlined text-[16px] text-green-500">check_circle</span>}
+                                        </div>
+                                        <p className="text-[10px] text-muted-foreground -mt-3">Fresh theme with forest accents</p>
+                                        <div className="w-full flex gap-2">
+                                            <div style={{ backgroundColor: '#22c55e' }} className="h-6 flex-1 rounded shadow-sm"></div>
+                                            <div style={{ backgroundColor: '#ffffff' }} className="h-6 flex-[2] rounded shadow-sm border border-border/50"></div>
+                                            <div style={{ backgroundColor: '#f0fdf4' }} className="h-6 flex-[2] rounded shadow-sm"></div>
+                                            <div style={{ backgroundColor: '#dcfce7' }} className="h-6 flex-[2] rounded shadow-sm"></div>
+                                        </div>
+                                    </button>
+
+                                    {/* Purple Template */}
+                                    <button
+                                        onClick={() => setColorTheme('purple')}
+                                        className={`relative p-4 border rounded-xl text-left transition-colors bg-card flex flex-col gap-4 group ${colorTheme === 'purple' ? 'border-purple-500 ring-1 ring-purple-500' : 'border-border hover:border-purple-500/50'}`}
+                                    >
+                                        <div className="flex items-center justify-between w-full">
+                                            <p className="text-sm font-bold">Purple Light</p>
+                                            {colorTheme === 'purple' && <span className="material-symbols-outlined text-[16px] text-purple-500">check_circle</span>}
+                                        </div>
+                                        <p className="text-[10px] text-muted-foreground -mt-3">Royal theme with violet accents</p>
+                                        <div className="w-full flex gap-2">
+                                            <div style={{ backgroundColor: '#a855f7' }} className="h-6 flex-1 rounded shadow-sm"></div>
+                                            <div style={{ backgroundColor: '#ffffff' }} className="h-6 flex-[2] rounded shadow-sm border border-border/50"></div>
+                                            <div style={{ backgroundColor: '#faf5ff' }} className="h-6 flex-[2] rounded shadow-sm"></div>
+                                            <div style={{ backgroundColor: '#f3e8ff' }} className="h-6 flex-[2] rounded shadow-sm"></div>
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
                         </section>
 

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from '@/app/components/ThemeProvider';
 
-const font = Plus_Jakarta_Sans({
+const font = Poppins({
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-sans",
   display: "swap",
 });
