@@ -37,4 +37,3 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 
 
-https://swcdn.apple.com/content/downloads/22/06/047-96175-A_196UW6QK9G/dx1bmt6mb0q3llh0iyingau9ld5liod96r/InstallAssistant.pkg
